@@ -1,0 +1,51 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Multi Timer Config
+    link(href="//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.1.1-1/css/cosmo/bootstrap.min.css", rel="stylesheet")
+    link(href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css", rel="stylesheet")
+    link(href="/stylesheets/style.css", rel="stylesheet")
+  body(ng-app="MultiTimer")
+    .container-fluid(ng-controller="TimersController", ng-cloak="ng-cloak")
+      .row.header
+        .col-xs-12
+          a.pull-right(href="#", ng-click="close()")
+            i.fa.fa-check.fa-lg
+          h1.text-center Multi Timer
+      .row(ng-hide="timerEdit == null")
+        .col-xs-9
+          input#timer-label.form-control.input-block(type="text", placeholder="Timer Label", ng-model="editLabel", maxlength="24")
+        .col-xs-3
+          a.btn.btn-success.btn-block(href="#", ng-click="saveEdit()")
+            i.fa.fa-save
+      hr(ng-hide="timerEdit == null")
+      .row(ng-hide="everything.state == 'loaded'")
+        .col-lg-12
+          h3.text-center.text-muted Loading Timers…
+      .row(ng-show="everything.state == 'loaded'")
+        .col-lg-12
+          div
+            .row.timer-row(ng-class="{ 'in-edit': timer == timerEdit }", ng-repeat="timer in timers", ng-click="editTimer(timer)")
+              .col-xs-2
+                i.fa(ng-class="{'fa-chevron-up' : timer.direction == 'up', 'fa-chevron-down' : timer.direction == 'down' }")
+              .col-xs-3
+                span(ng-if="timer.direction == 'down'") {{ timer.length | duration }}
+              .col-xs-7(ng-class="{ 'label-blank' : timer.label.length === 0 }") {{ timer.label | ifEmpty: "No Label" }}
+          .row(ng-if="noTimers()")
+            .col-xs-12
+              h3.text-center.text-muted
+                | No Timers
+                i.fa.fa-warning
+      script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js")
+      script(src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/js/bootstrap.min.js")
+      script(src="//cdn.firebase.com/js/client/1.0.15/firebase.js")
+      script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js")
+      script(src="//cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js")
+      script(src="//cdnjs.cloudflare.com/ajax/libs/spin.js/2.0.0/spin.min.js")
+      script(src="//cdnjs.cloudflare.com/ajax/libs/angular-spinner/0.4.0/angular-spinner.min.js")
+      script.
+        var token = '#{token}'
+      script(src="/javascripts/multi-timer.js")

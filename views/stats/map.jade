@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  #map.map.map--fullscreen
+
+  script(type="text/javascript", src="//maps.googleapis.com/maps/api/js?libraries=visualization&sensor=false?key=#{key}")
+  script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js")
+  script(type="text/javascript", src="//cdnjs.cloudflare.com/ajax/libs/superagent/0.15.7/superagent.min.js")
+  script(type="text/javascript").
+
+    superagent.get('/stats/locations.json', function (err, res) {
+      var heatmapData = res.body.map(function (location) {
+        return { location: new google.maps.LatLng(location.lat, location.lon), weight: location.weight }
+      });
+      var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatmapData
+      });
+      heatmap.setMap(map);
+    });
+
+    $('#map').css('height', $(window).height() - 43);
+
+    var mapOptions = {
+      center: new google.maps.LatLng(54.817, -4.434),
+      zoom: 6,
+      mapTypeId: google.maps.MapTypeId.SATELLITE
+    };
+    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
