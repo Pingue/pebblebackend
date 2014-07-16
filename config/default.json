@@ -1,4 +1,5 @@
 {
   "database": "",
-  "googleMaps": ""
+  "googleMaps": "",
+  "port": 6006
 }
