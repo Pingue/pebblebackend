@@ -34,6 +34,8 @@ HitSchema.statics.recordHit = function (req, type, data, callback) {
     userAgent: req.get('User-Agent')
   });
   if (data.lat && data.lon) {
+    data.lat = roundLocation(data.lat, 2);
+    data.lon = roundLocation(data.lon, 2);
     hit.location = [ data.lon, data.lat ]
   }
   if (req.get('X-Pebble-ID')) {
@@ -43,3 +45,8 @@ HitSchema.statics.recordHit = function (req, type, data, callback) {
 }
 
 module.exports = mongoose.model('Hit', HitSchema, 'hits');
+
+function roundLocation(loc, dp) {
+  var multiplier = Math.pow(10, dp);
+  return Math.round(loc * multiplier) / multiplier;
+}
