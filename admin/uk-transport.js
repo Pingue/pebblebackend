@@ -7,6 +7,8 @@ module.exports = (function () {
   var csv = require('csv');
   var async = require('async');
   var UkGeoTool = require('UkGeoTool');
+  var mkdirp = require('mkdirp');
+
   var TrainStation = require('../models/train-station');
 
   var router = express.Router();
@@ -61,9 +63,7 @@ module.exports = (function () {
   });
 
   function downloadNaptan(callback) {
-    // TMP: Skipping the download because it takes forever!
-    return callback();
-    fs.mkdir('tmp', function (err) {
+    mkdirp('tmp', function (err) {
       if (err) {
         return callback(err);
       }
