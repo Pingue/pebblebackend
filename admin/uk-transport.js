@@ -63,10 +63,15 @@ module.exports = (function () {
   function downloadNaptan(callback) {
     // TMP: Skipping the download because it takes forever!
     return callback();
-    var outStream = fs.createWriteStream('tmp/naptan.zip');
-    request('http://www.dft.gov.uk/NaPTAN/snapshot/NaPTANcsv.zip').pipe(outStream)
-    outStream.on('finish', function () {
-      callback();
+    fs.mkdir('tmp', function (err) {
+      if (err) {
+        return callback(err);
+      }
+      var outStream = fs.createWriteStream('tmp/naptan.zip');
+      request('http://www.dft.gov.uk/NaPTAN/snapshot/NaPTANcsv.zip').pipe(outStream)
+      outStream.on('finish', function () {
+        callback();
+      });
     });
   }
 
