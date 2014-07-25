@@ -83,6 +83,7 @@ module.exports = (function () {
     function sendData(data, cached) {
       Hit.recordHit(req, 'tube.details', { line: lineName, cached: cached });
 
+
       var line = _.findWhere(data.lines, { name: lineName });
       res.json({
         response: line.details.length ? line.details : 'Good Service',
@@ -107,12 +108,18 @@ module.exports = (function () {
 
   function tubeUpdate(callback) {
     request('http://cloud.tfl.gov.uk/TrackerNet/LineStatus', function (err, res, body) {
+      if (err) {
+        return callback(err);
+      }
       xml2js.parseString(body, function (err, data) {
+        if (err) {
+          return callback(err);
+        }
         Cache.tube.lines = data.ArrayOfLineStatus.LineStatus.map(function (line) {
           return {
             name: line.Line[0].$.Name,
             status: line.Status[0].$.Description.toLowerCase(),
-            details: ''
+            details: line.$.StatusDetails
           };
         });
         Cache.tube.lastUpdated = new Date();
